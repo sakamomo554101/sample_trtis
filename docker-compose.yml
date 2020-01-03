@@ -1,0 +1,34 @@
+version: "3"
+
+services: 
+  trtis-server-build-container:
+    image: trtis-server-build
+    build: ./docker/server
+    container_name: trtis-server-build-container  # prevent to set the default docker container name
+    volumes: 
+      - ./model_repository:/models
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+    ulimits: 
+      memlock: -1
+      stack: 67108864
+    shm_size: "1g"
+    entrypoint: "/opt/tensorrtserver/nvidia_entrypoint.sh trtserver --model-repository=/models --log-verbose=1" # TODO : Should not set entrypoint, get parameter from commandline
+  trtis-client-container:
+    image: trtis-client
+    build: ./docker/client
+    container_name: trtis-client-container
+    volumes: 
+      - ./src/client:/workspace/custom_client
+    network_mode: host
+    tty: true
+  trtis-custom-backend-build-container:
+    image: trtis-custom-backend-build
+    build: ./docker/custom_backend
+    container_name: trtis-custom-backend-build-container
+    volumes: 
+      - ./src/custom_backend:/workspace/custom_backend
+    network_mode: host
+    tty: true
