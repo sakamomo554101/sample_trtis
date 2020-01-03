@@ -33,6 +33,8 @@ wget -O model_repository/resnet50_netdef/1/model.netdef \
      http://download.caffe2.ai.s3.amazonaws.com/models/resnet50/predict_net.pb
 wget -O model_repository/resnet50_netdef/1/init_model.netdef \
      http://download.caffe2.ai.s3.amazonaws.com/models/resnet50/init_net.pb
+cp tensorrt-inference-server/docs/examples/model_repository/resnet50_netdef/config.pbtxt model_repository/resnet50_netdef
+cp tensorrt-inference-server/docs/examples/model_repository/resnet50_netdef/resnet50_labels.txt model_repository/resnet50_netdef
 
 # TensorFlow inception
 mkdir -p model_repository/inception_graphdef/1
@@ -40,8 +42,19 @@ wget -O /tmp/inception_v3_2016_08_28_frozen.pb.tar.gz \
      https://storage.googleapis.com/download.tensorflow.org/models/inception_v3_2016_08_28_frozen.pb.tar.gz
 (cd /tmp && tar xzf inception_v3_2016_08_28_frozen.pb.tar.gz)
 mv /tmp/inception_v3_2016_08_28_frozen.pb model_repository/inception_graphdef/1/model.graphdef
+cp tensorrt-inference-server/docs/examples/model_repository/inception_graphdef/config.pbtxt model_repository/inception_graphdef
+cp tensorrt-inference-server/docs/examples/model_repository/inception_graphdef/inception_labels.txt model_repository/inception_graphdef
 
 # ONNX densenet
 mkdir -p model_repository/densenet_onnx/1
 wget -O model_repository/densenet_onnx/1/model.onnx \
      https://contentmamluswest001.blob.core.windows.net/content/14b2744cf8d6418c87ffddc3f3127242/9502630827244d60a1214f250e3bbca7/08aed7327d694b8dbaee2c97b8d0fcba/densenet121-1.2.onnx
+cp tensorrt-inference-server/docs/examples/model_repository/densenet_onnx/config.pbtxt model_repository/densenet_onnx
+cp tensorrt-inference-server/docs/examples/model_repository/densenet_onnx/densenet_labels.txt model_repository/densenet_onnx
+
+# copy other models
+mkdir -p model_repository/simple
+cp -r tensorrt-inference-server/docs/examples/model_repository/simple model_repository/
+
+mkdir -p model_repository/simple_string
+cp -r tensorrt-inference-server/docs/examples/model_repository/simple_string model_repository/
