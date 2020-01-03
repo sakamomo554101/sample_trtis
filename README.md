@@ -36,3 +36,20 @@ If you use the default trtis models(ex. ResNet50, sequence..), need to execute t
 ```
 $ bash fetch_default_models.sh
 ```
+
+### Execute trtis-client script
+
+* attach the trtis client container
+```
+$ docker exec -it trtis-client-container bash
+```
+
+* execute client script in trtis client container(ex. simple model)
+```
+$ python3 src/clients/python/simple_client.py
+```
+
+* execute custom client script in trtis client container(ex. sample_instance model)
+```
+$ python3 custom_client/python/sample_instance_client.py
+```
