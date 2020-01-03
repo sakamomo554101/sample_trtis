@@ -1,0 +1,22 @@
+FROM tensorrtserver
+
+# Start docker file
+RUN echo "now building..."
+
+# update apt-get
+RUN apt-get update --fix-missing
+
+# setup workdir
+WORKDIR /workspace
+
+# create custom isntance directories
+ADD src/custom src/
+
+# setup makefile
+RUN (cd build && \
+            cmake -DTRTIS_ENABLE_GPU=OFF \
+                  -DCMAKE_BUILD_TYPE=Release \
+                  make -j16 trtis && \
+            make -j16 trtis)
+
+# build custom instance
