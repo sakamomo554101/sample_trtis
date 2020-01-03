@@ -24,6 +24,9 @@ if [ ! "$(docker image ls -q tensorrtserver_client)" ]; then
 fi
 cd ../
 
+# stop and delete container if existed
+docker-compose down
+
 # create the trtis client, custom-backend containers(see docker-compose.yml for more information)
 docker-compose up --build -d trtis-client-container
 docker-compose up --build -d trtis-custom-backend-build-container
