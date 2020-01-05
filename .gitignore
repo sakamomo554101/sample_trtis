@@ -3,3 +3,6 @@
 
 # ignore model_repository
 model_repository/
+
+# ignore python cache
+*.pyc
