@@ -12,6 +12,9 @@ cp -f ./tensorrt-inference-server/qa/L0_backend_release/simple_seq_models/simple
 mkdir -p model_repository/sample_sequence/1
 cp -f ./model_settings/sample_sequence/config.pbtxt \
       ./model_repository/sample_sequence/
+mkdir -p model_repository/mecab_model/1
+cp -f ./model_settings/mecab_model/config.pbtxt \
+      ./model_repository/mecab_model/
 
 # TODO : build the server codes
 
@@ -26,6 +29,8 @@ docker exec -it $CUSTOM_BACKEND_CONTAINER_NAME sh -c \
     "echo 'add_subdirectory(../../custom_backend/sample_instance src/custom/sample_instance)' >> /workspace/build/trtis-custom-backends/CMakeLists.txt"
 docker exec -it $CUSTOM_BACKEND_CONTAINER_NAME sh -c \
     "echo 'add_subdirectory(../../custom_backend/sample_sequence src/custom/sample_sequence)' >> /workspace/build/trtis-custom-backends/CMakeLists.txt"
+docker exec -it $CUSTOM_BACKEND_CONTAINER_NAME sh -c \
+    "echo 'add_subdirectory(../../custom_backend/mecab_model src/custom/mecab_model)' >> /workspace/build/trtis-custom-backends/CMakeLists.txt"
 ## build custom backend files
 docker exec -it $CUSTOM_BACKEND_CONTAINER_NAME sh -c "cd /workspace && bash build_custom_backend.sh"
 
@@ -37,3 +42,5 @@ docker cp $CONTAINER_ID:/workspace/build/trtis-custom-backends/src/custom/sequen
           model_repository/simple_sequence/1/
 docker cp $CONTAINER_ID:/workspace/build/trtis-custom-backends/src/custom/sample_sequence/libsample_sequence.so \
           model_repository/sample_sequence/1/
+docker cp $CONTAINER_ID:/workspace/build/trtis-custom-backends/src/custom/mecab_model/libmecab_model.so \
+          model_repository/mecab_model/1/

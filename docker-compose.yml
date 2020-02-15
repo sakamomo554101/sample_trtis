@@ -3,7 +3,9 @@ version: "3"
 services: 
   trtis-server-build-container:
     image: trtis-server-build
-    build: ./docker/server
+    build:
+      context: ./docker
+      dockerfile: ./server/Dockerfile
     container_name: trtis-server-build-container  # prevent to set the default docker container name
     volumes: 
       - ./model_repository:/models
@@ -26,7 +28,9 @@ services:
     tty: true
   trtis-custom-backend-build-container:
     image: trtis-custom-backend-build
-    build: ./docker/custom_backend
+    build: 
+      context: ./docker
+      dockerfile: ./custom_backend/Dockerfile
     container_name: trtis-custom-backend-build-container
     volumes: 
       - ./src/custom_backend:/workspace/custom_backend

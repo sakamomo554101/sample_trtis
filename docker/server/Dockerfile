@@ -11,8 +11,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 # update apt-get library
 RUN apt-get update -y --fix-missing
 
+# install core packages
+RUN set -x && \
+    apt-get install -y wget
+
 # build opencv library
-RUN apt-get install -y libopencv-dev libopencv-core-dev
+RUN set -x && \
+    apt-get install -y libopencv-dev libopencv-core-dev
+
+# copy mecab install script and build mecab
+ADD ./install_script/install_mecab.sh /workspace/
+RUN set -x && \
+    bash ./install_mecab.sh
 
 # setup enrtypoint
 ENTRYPOINT ["/opt/tensorrtserver/nvidia_entrypoint.sh"]
