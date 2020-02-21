@@ -53,3 +53,19 @@ $ python3 src/clients/python/simple_client.py
 ```
 $ python3 custom_client/python/sample_instance_client.py
 ```
+
+## Other information
+
+### setup docker container without building docker images
+
+need to execute the following command.
+```
+$ bash setup_trtis_docker_containers.sh -b
+```
+
+### setup docker container without using docker cache
+
+need to execute the following command.
+```
+$ bash setup_trtis_docker_containers.sh -c
+```

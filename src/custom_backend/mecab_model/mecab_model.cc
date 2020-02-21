@@ -360,12 +360,12 @@ Context::GetInputText(
   const void* content;
   uint64_t content_byte_size = -1;
   if (!input_fn(input_context, input_name, &content, &content_byte_size)) {
-      LOG_INFO << "[SampleSequence] error input_fn" << std::endl;
+      LOG_INFO << "[MacabModel] error input_fn" << std::endl;
       return kInputContents;
   }
 
   if (content == nullptr) {
-      LOG_INFO << "[SampleInstance] error input content is null" << std::endl;
+      LOG_INFO << "[MacabModel] error input content is null" << std::endl;
       return kInputContents;
   }
 

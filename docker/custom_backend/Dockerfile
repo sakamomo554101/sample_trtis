@@ -13,7 +13,11 @@ RUN apt-get update -y --fix-missing
 
 # install core packages
 RUN set -x && \
-    apt-get install -y wget
+    apt-get install -y wget libboost-dev --fix-missing
+
+# build opencv library
+RUN set -x && \
+    apt-get install -y libopencv-dev libopencv-core-dev --fix-missing
 
 # copy build script
 ADD ./custom_backend/build_custom_backend.sh /workspace/

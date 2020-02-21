@@ -45,10 +45,10 @@ def infer(ctx_param, datas_dict, batch_size=1):
     
     result_map = {}
     for corr_id, text_list in datas_dict.items():
-        send_request(infer_ctx, corr_id, "", batch_size=batch_size, start_of_sequence=True)
+        send_request_with_bytes(infer_ctx, corr_id, "", batch_size=batch_size, start_of_sequence=True)
         for text in text_list:
-            send_request(infer_ctx, corr_id, text, batch_size=batch_size)
-        result = send_request(infer_ctx, corr_id, "", batch_size=batch_size, end_of_sequence=True)
+            send_request_with_bytes(infer_ctx, corr_id, text, batch_size=batch_size)
+        result = send_request_with_bytes(infer_ctx, corr_id, "", batch_size=batch_size, end_of_sequence=True)
         
         # 形態素解析結果をパースする（|で単語が分割される)
         tmp_text_list = result["OUTPUT"][0][0].decode("utf-8").split("|")
@@ -62,20 +62,7 @@ def infer(ctx_param, datas_dict, batch_size=1):
 
     print(result_map)
 
-def send_request(ctx, corr_id, text, batch_size=1, start_of_sequence=False, end_of_sequence=False):
-    flags = InferRequestHeader.FLAG_NONE
-    if start_of_sequence:
-        flags = flags | InferRequestHeader.FLAG_SEQUENCE_START
-    if end_of_sequence:
-        flags = flags | InferRequestHeader.FLAG_SEQUENCE_END
-    
-    result = ctx.run({ 'INPUT' : [np.array([text])]},
-                     { 'OUTPUT' : InferContext.ResultFormat.RAW },
-                     batch_size=batch_size, flags=flags, corr_id=corr_id)
-    return result
-
-
 if __name__ == "__main__":
-    print("start sample_instance_client script")
+    print("start script")
     main()
-    print("end sample_instance_client script")
+    print("end script")

@@ -1,4 +1,5 @@
 from tensorrtserver.api import *
+import numpy as np
 
 
 class ContextParameter:
@@ -48,3 +49,40 @@ def check_health_status(url, model_name, protocol, http_headers, verbose):
     else:
         print("model is not ready!")
         return False
+
+
+def send_request_with_bytes(ctx, corr_id, byte_data, batch_size=1, start_of_sequence=False, end_of_sequence=False):
+    flags = InferRequestHeader.FLAG_NONE
+    if start_of_sequence:
+        flags = flags | InferRequestHeader.FLAG_SEQUENCE_START
+    if end_of_sequence:
+        flags = flags | InferRequestHeader.FLAG_SEQUENCE_END
+    
+    result = ctx.run({ 'INPUT' : [np.array([byte_data])]},
+                     { 'OUTPUT' : InferContext.ResultFormat.RAW },
+                     batch_size=batch_size, flags=flags, corr_id=corr_id)
+    return result
+
+def send_request(ctx, corr_id, array, batch_size=1, start_of_sequence=False, end_of_sequence=False):
+    flags = InferRequestHeader.FLAG_NONE
+    if start_of_sequence:
+        flags = flags | InferRequestHeader.FLAG_SEQUENCE_START
+    if end_of_sequence:
+        flags = flags | InferRequestHeader.FLAG_SEQUENCE_END
+    
+    result = ctx.run({ 'INPUT' : [array]},
+                     { 'OUTPUT' : InferContext.ResultFormat.RAW },
+                     batch_size=batch_size, flags=flags, corr_id=corr_id)
+    return result
+
+def get_model_parameter(url, protocol, model_name, verbose=False):
+    ctx = ServerStatusContext(url, protocol, model_name, verbose)
+    server_status = ctx.get_server_status()
+    
+    # check model status
+    if model_name not in server_status.model_status:
+        raise Exception("unable to get status for '" + model_name + "'")
+    
+    # get config
+    status = server_status.model_status[model_name]
+    return status.config
