@@ -13,11 +13,11 @@ RUN apt-get update -y --fix-missing
 
 # install core packages
 RUN set -x && \
-    apt-get install -y wget
+    apt-get install -y wget libboost-dev --fix-missing
 
 # build opencv library
 RUN set -x && \
-    apt-get install -y libopencv-dev libopencv-core-dev
+    apt-get install -y libopencv-dev libopencv-core-dev --fix-missing
 
 # copy mecab install script and build mecab
 ADD ./install_script/install_mecab.sh /workspace/
