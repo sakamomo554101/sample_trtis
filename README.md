@@ -60,12 +60,24 @@ $ python3 custom_client/python/sample_instance_client.py
 
 need to execute the following command.
 ```
-$ bash setup_trtis_docker_containers.sh -b
+$ bash setup_trtis_docker_containers.sh --no-build
 ```
 
 ### setup docker container without using docker cache
 
 need to execute the following command.
 ```
-$ bash setup_trtis_docker_containers.sh -c
+$ bash setup_trtis_docker_containers.sh --no-cache
+```
+
+### setup only client docker container
+
+```
+$ bash setup_trtis_docker_containers.sh --only-client
+```
+
+### setup only server docker container
+
+```
+$ bash setup_trtis_docker_containers.sh --only-server
 ```
