@@ -5,7 +5,7 @@ from util import *
 
 def main():
     # setup environment
-    server_url = "localhost:8000"
+    ctx_param.server_url = "trtis-server-build-container:8000"
     http_headers = []
     http_headers.append(b"test1:hoge")
     verbose = True

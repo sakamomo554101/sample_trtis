@@ -377,7 +377,7 @@ Context::CreateResultTreeStr(std::vector<std::vector<face_recognition_model::Fac
     image_info.add_child("face_infos", face_infos);
     image_infos.push_back(std::make_pair("", image_info));
   }
-  pt.add_child("image_infos", image_infos);
+  pt.add_child("result.image_infos", image_infos);
 
   // convert ptree to std::string
   std::ostringstream oss;

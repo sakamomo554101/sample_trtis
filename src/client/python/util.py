@@ -1,5 +1,6 @@
 from tensorrtserver.api import *
 import numpy as np
+import argparse
 
 
 class ContextParameter:
@@ -10,7 +11,6 @@ class ContextParameter:
         self.protocol = ProtocolType.from_str("http") # http or grpc
         self.model_name = model_name
         self.model_version = -1
-
 
 def get_input(binary_mode=False):
     text_list = []
@@ -24,7 +24,6 @@ def get_input(binary_mode=False):
             text_list.append(text)
     print(text_list)
     return text_list
-
 
 def check_health_status(url, model_name, protocol, http_headers, verbose):
     print("Health for model {}".format(model_name))
@@ -49,7 +48,6 @@ def check_health_status(url, model_name, protocol, http_headers, verbose):
     else:
         print("model is not ready!")
         return False
-
 
 def send_request_with_bytes(ctx, corr_id, byte_data, batch_size=1, start_of_sequence=False, end_of_sequence=False):
     flags = InferRequestHeader.FLAG_NONE
@@ -86,3 +84,9 @@ def get_model_parameter(url, protocol, model_name, verbose=False):
     # get config
     status = server_status.model_status[model_name]
     return status.config
+
+def get_image_path_from_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("image_path")
+    args = parser.parse_args()
+    return args.image_path
