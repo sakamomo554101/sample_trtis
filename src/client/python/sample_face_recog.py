@@ -10,7 +10,7 @@ import json
 def main():
     # setup environment
     ctx_param = ContextParameter(model_name="face_recognition_model")
-    ctx_param.server_url = "localhost:8000"
+    ctx_param.server_url = "trtis-server-build-container:8000"
     ctx_param.http_headers = None
     ctx_param.verbose = True
     ctx_param.protocol = ProtocolType.from_str("http") # http or grpc
