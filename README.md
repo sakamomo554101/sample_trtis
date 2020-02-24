@@ -90,7 +90,7 @@ need to prepare the following steps
 
 The following directory is need to create on the root folder of this repository.
 
-"dataset/face/image"
+* "dataset/face/image"
 
 You need to store the image files with face in above folder.
 
@@ -98,7 +98,7 @@ You need to store the image files with face in above folder.
 
 You need to store the config file of csv format in following path.
 
-"dataset/face/face.csv"
+* "dataset/face/face.csv"
 
 This csv file format is following.
 
