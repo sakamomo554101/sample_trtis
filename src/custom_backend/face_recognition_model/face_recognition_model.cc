@@ -6,6 +6,7 @@
 #include "src/core/model_config.h"
 #include "src/core/model_config.pb.h"
 #include "src/custom/sdk/custom_instance.h"
+#include "custom_backend/face_recognition_model/face_wrapper.h"
 
 // dlib
 #include <dlib/image_processing/frontal_face_detector.h>
@@ -31,31 +32,6 @@ using namespace boost::property_tree;
 namespace nvidia { namespace inferenceserver { namespace custom {
 namespace face_recognition_model {
 
-// this class contains the face area and name
-class FaceData {
-  public:
-    FaceData(const dlib::rectangle rect, const std::string name) 
-    {
-      this->rect = rect;
-      this->name = name;
-    }
-    ~FaceData() {}
-
-    dlib::rectangle Rect()
-    {
-      return this->rect;
-    }
-
-    std::string Name()
-    {
-      return this->name;
-    }
-
-  private:
-    dlib::rectangle rect;
-    std::string name;
-};
-
 // Context object. All state must be kept in this object.
 class Context : public CustomInstance {
  public:
@@ -73,7 +49,7 @@ class Context : public CustomInstance {
  private:
   const std::string INSTANCE_NAME = "[face_recognition_model]";
   std::map<uint64_t, std::vector<std::vector<face_recognition_model::FaceData>>> data_map;
-  dlib::frontal_face_detector face_detector;
+  face_recognition_model::FaceWrapper face_wrapper;
 
   int GetControlInput(
       CustomGetNextInputFn_t input_fn, void* input_context, 
@@ -113,7 +89,8 @@ int
 Context::Init()
 {
   // 顔認証ライブラリのインスタンスをキャッシュする
-  face_detector = dlib::get_frontal_face_detector();
+  //face_wrapper = face_recognition_model::FaceWrapper();
+  face_wrapper.Initialize();
   return ErrorCodes::Success;
 }
 
@@ -169,29 +146,13 @@ Context::Execute(
       const char* input_name = payload.input_names[0];
       err = GetInputMatrix(input_fn, payload.input_context, input_name, corrid, cv_img);
 
-      // convert dlib image data from opencv image data
-      auto dlib_cv_img = dlib::cv_image<dlib::rgb_pixel>(cv_img);
-
-      // detect the faces from image data
-      if (kDebugMode) {
-        std::cout << INSTANCE_NAME << " dlib_cv_img size is " << dlib_cv_img.size() << std::endl;
+      // detect and recognize face data
+      auto face_datas = face_wrapper.ExtractFaceData(cv_img);
+      if (face_datas.empty()) {
+        std::cout << INSTANCE_NAME << " face data is not found" << std::endl;
+        continue;
       }
-      std::vector<dlib::rectangle> dets = face_detector(dlib_cv_img);
-
-      // process result data
-      if (dets.empty()) {
-          std::cout << INSTANCE_NAME << " FaceDetector : face data is not found" << std::endl;
-      } else {
-        std::vector<face_recognition_model::FaceData> face_datas;
-        for (auto det : dets) {
-          // TODO : face recognition
-
-          // create face data
-          face_recognition_model::FaceData data(det, "unknown");
-          face_datas.push_back(data);
-        }
-        data_map[corrid].push_back(face_datas);
-      }
+      data_map[corrid].push_back(face_datas);
     }
   }
 

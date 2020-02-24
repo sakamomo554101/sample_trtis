@@ -81,3 +81,35 @@ $ bash setup_trtis_docker_containers.sh --only-client
 ```
 $ bash setup_trtis_docker_containers.sh --only-server
 ```
+
+### use face recognition function
+
+need to prepare the following steps
+
+#### prepare the dataset with face image
+
+The following directory is need to create on the root folder of this repository.
+
+"dataset/face/image"
+
+You need to store the image files with face in above folder.
+
+#### prepare the config csv file
+
+You need to store the config file of csv format in following path.
+
+"dataset/face/face.csv"
+
+This csv file format is following.
+
+* first column is "image file name"
+* second column is "face name"
+
+
+```
+hoge.jpg, fuga
+taro.jpg, hanako
+
+...
+
+```

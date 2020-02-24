@@ -18,6 +18,7 @@ set_target_properties(
 
 add_library(
   face_recognition_model SHARED
+  face_wrapper.cc
   face_recognition_model.cc
 )
 target_include_directories(face_recognition_model PRIVATE ${OpenCV_INCLUDE_DIRS})

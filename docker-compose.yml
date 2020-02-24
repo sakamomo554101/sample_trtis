@@ -9,6 +9,7 @@ services:
     container_name: trtis-server-build-container  # prevent to set the default docker container name
     volumes: 
       - ./model_repository:/models
+      - ./dataset:/dataset
     ports:
       - "8000:8000"
       - "8001:8001"
@@ -24,6 +25,7 @@ services:
     container_name: trtis-client-container
     volumes: 
       - ./src/client:/workspace/custom_client
+      - ./dataset:/workspace/dataset
     network_mode: host
     tty: true
   trtis-custom-backend-build-container:

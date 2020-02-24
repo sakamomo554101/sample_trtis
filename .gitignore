@@ -4,5 +4,8 @@
 # ignore model_repository
 model_repository/
 
+# ignore dataset folder
+dataset/
+
 # ignore python cache
 *.pyc
