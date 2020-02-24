@@ -113,3 +113,17 @@ taro.jpg, hanako
 ...
 
 ```
+
+#### execute demo client of face recognition
+
+* attach the trtis client container
+```
+$ docker exec -it trtis-client-container bash
+```
+
+* execute demo script
+```
+$ streamlit run custom_client/python/sample_face_recog2.py
+```
+
+* open the browser and access "http://localhost:8501"
