@@ -15,9 +15,23 @@ cp -f ./model_settings/sample_sequence/config.pbtxt \
 mkdir -p model_repository/mecab_model/1
 cp -f ./model_settings/mecab_model/config.pbtxt \
       ./model_repository/mecab_model/
+## create face recognition model folder and move config and model file.
 mkdir -p model_repository/face_recognition_model/1
 cp -f ./model_settings/face_recognition_model/config.pbtxt \
       ./model_repository/face_recognition_model/
+if [ ! -e "model_repository/face_recognition_model/dlib_face_recognition_resnet_model_v1.dat" ]; then
+    curl -O http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat.bz2
+    bzip2 -d dlib_face_recognition_resnet_model_v1.dat.bz2
+    mv dlib_face_recognition_resnet_model_v1.dat model_repository/face_recognition_model/
+fi
+if [ ! -e "model_repository/face_recognition_model/shape_predictor_5_face_landmarks.dat" ]; then
+    curl -O http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2
+    bzip2 -d shape_predictor_5_face_landmarks.dat.bz2
+    mv shape_predictor_5_face_landmarks.dat model_repository/face_recognition_model/
+fi
+
+# create the face dataset folder if needed
+mkdir -p dataset/face/image
 
 # build the custom-backend codes
 ## add the build target source into CMakeLists.txt(TODO : write target into CMakeLists.txt if needed.)
