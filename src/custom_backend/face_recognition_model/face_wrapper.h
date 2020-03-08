@@ -145,6 +145,9 @@ class FaceWrapper {
 
     // util
     std::vector<std::string> split_text(const std::string s, char delim);
+
+    // debug
+    const bool kDebugMode = true;
 };
 
 }  // namespace face_recognition_model

@@ -2,6 +2,7 @@
 #include <string>
 #include <thread>
 #include <map>
+#include <time.h>
 
 #include "src/core/model_config.h"
 #include "src/core/model_config.pb.h"
@@ -74,6 +75,7 @@ class Context : public CustomInstance {
 
   // debug mode
   const bool kDebugMode = true;
+  const bool kTimerMode = true;
 };
 
 Context::Context(
@@ -146,8 +148,19 @@ Context::Execute(
       const char* input_name = payload.input_names[0];
       err = GetInputMatrix(input_fn, payload.input_context, input_name, corrid, cv_img);
 
+      // set timer
+      clock_t start;
+      start = clock();
+
       // detect and recognize face data
       auto face_datas = face_wrapper.ExtractFaceData(cv_img);
+
+      // calc time of inference
+      clock_t end = clock();
+      const double time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0;
+      std::cout << INSTANCE_NAME << " face recognition process time : " << time << "[ms]" << std::endl; 
+
+      // check the face datas
       if (face_datas.empty()) {
         std::cout << INSTANCE_NAME << " face data is not found" << std::endl;
         continue;

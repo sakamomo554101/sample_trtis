@@ -41,6 +41,15 @@ FaceWrapper::Initialize(float distance_threshold) {
   int register_count = registerFaceDatasFromCsv("/dataset/face/face.csv", "/dataset/face/image/");
   std::cout << LOG_PREFIX << " initialize : register face data count is " << register_count << std::endl;
 
+  // print DLIB_USE_CUDA if needed
+  if (kDebugMode) {
+#ifdef DLIB_USE_CUDA
+    std::cout << LOG_PREFIX << " DLIB mode is GPU" << std::endl;
+#else
+    std::cout << LOG_PREFIX << " DLIB mode is CPU" << std::endl;
+#endif
+  }
+
   return ErrorCodes::Success;
 }
 

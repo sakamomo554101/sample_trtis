@@ -1,6 +1,8 @@
 from tensorrtserver.api import *
 import numpy as np
 import argparse
+import glob
+import os
 
 
 class ContextParameter:
@@ -68,7 +70,7 @@ def send_request(ctx, corr_id, array, batch_size=1, start_of_sequence=False, end
     if end_of_sequence:
         flags = flags | InferRequestHeader.FLAG_SEQUENCE_END
     
-    result = ctx.run({ 'INPUT' : [array]},
+    result = ctx.run({ 'INPUT' : array},
                      { 'OUTPUT' : InferContext.ResultFormat.RAW },
                      batch_size=batch_size, flags=flags, corr_id=corr_id)
     return result
@@ -90,3 +92,14 @@ def get_image_path_from_args():
     parser.add_argument("image_path")
     args = parser.parse_args()
     return args.image_path
+
+def get_image_paths_from_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("image_folder")
+    args = parser.parse_args()
+    folder_path = args.image_folder
+    
+    # get image paths
+    paths = glob.glob(os.path.join(folder_path, "*.jpg"))
+    for path in paths:
+        yield path

@@ -3,6 +3,7 @@ platform: "custom"
 max_batch_size: 1
 default_model_filename: "libface_recognition_model.so"
 sequence_batching {
+  max_sequence_idle_microseconds: 10000000
   control_input [
     {
       name: "START"
