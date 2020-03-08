@@ -82,6 +82,12 @@ $ bash setup_trtis_docker_containers.sh --only-client
 $ bash setup_trtis_docker_containers.sh --only-server
 ```
 
+### setup docker containers with GPU
+
+```
+$ bash setup_trtis_docker_containers.sh --use-gpu
+```
+
 ### use face recognition function
 
 need to prepare the following steps
@@ -123,7 +129,12 @@ $ docker exec -it trtis-client-container bash
 
 * execute demo script
 ```
-$ streamlit run custom_client/python/sample_face_recog2.py
+$ streamlit run custom_client/python/face_recognition_client.py
 ```
 
 * open the browser and access "http://localhost:8501"
+
+* following page will be displayed
+  * This main page is displayed using [streamlit](https://github.com/streamlit/streamlit)
+
+![face recognition main page](document/image/face_recognition_main.png)
