@@ -38,8 +38,13 @@ def preprocess(img, format, dtype, c, h, w, specific_scaling=None):
     # (like BGR) so we just assume RGB.
     return ordered
 
-def get_byte_data_from_img(image_path, size):
+def get_byte_data_from_imgs(image_paths, size):
     # size = (height, width)
-    orig_img = Image.open(image_path)
-    img = preprocess(orig_img, model_config.ModelInput.FORMAT_NHWC, np.uint8, 3, size[0], size[1])
-    return img, orig_img
+    imgs = []
+    orig_imgs = []
+    for image_path in image_paths:
+        orig_img = Image.open(image_path)
+        img = preprocess(orig_img, model_config.ModelInput.FORMAT_NHWC, np.uint8, 3, size[0], size[1])
+        orig_imgs.append(orig_img)
+        imgs.append(img)  
+    return imgs, orig_imgs
