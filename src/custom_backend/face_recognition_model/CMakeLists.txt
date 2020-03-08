@@ -9,8 +9,11 @@ find_package(OpenCV REQUIRED)
 # face_recognition_model.so
 #
 configure_file(libface_recognition_model.ldscript libface_recognition_model.ldscript COPYONLY)
+# cuda
+set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} --expt-relaxed-constexpr)
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter")  # need to rewrite CXX_FLAGS to build dlib with CUDA
+#option(DLIB_USE_CUDA "" 0)  # TODO : DLIB_USE_CUDA should be set 0(CPU) or 1(GPU) according to the build options.
 add_subdirectory(dlib)
-target_compile_options(dlib PRIVATE -fno-aggressive-loop-optimizations -Wno-maybe-uninitialized)
 set_target_properties(
   dlib 
   PROPERTIES POSITION_INDEPENDENT_CODE ON
