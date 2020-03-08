@@ -6,7 +6,7 @@ from util import *
 def main():
     # setup environment
     ctx_param = ContextParameter(model_name="sample_sequence")
-    ctx_param.server_url = "trtis-server-build-container:8000"
+    ctx_param.server_url = "trtis-server-container:8000"
     ctx_param.http_headers = None
     ctx_param.verbose = True
     ctx_param.protocol = ProtocolType.from_str("http") # http or grpc
