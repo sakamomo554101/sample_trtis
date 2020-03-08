@@ -12,6 +12,7 @@ ADD ./build_client_library.sh /workspace/
 # Now, nothing to do.
 
 # set locale of japanese
+RUN sed -i.org -e 's|ports.ubuntu.com|jp.archive.ubuntu.com|g' /etc/apt/sources.list
 RUN apt-get update \
     && apt-get install -y locales \
     && locale-gen ja_JP.UTF-8 \

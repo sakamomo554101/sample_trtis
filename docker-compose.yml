@@ -1,12 +1,12 @@
-version: "3"
+version: "2.4"
 
 services: 
-  trtis-server-build-container:
-    image: trtis-server-build
+  trtis-server-container:
+    image: trtis-server
     build:
       context: ./docker
       dockerfile: ./server/Dockerfile
-    container_name: trtis-server-build-container  # prevent to set the default docker container name
+    container_name: trtis-server-container  # prevent to set the default docker container name
     volumes: 
       - ./model_repository:/models
       - ./dataset:/dataset

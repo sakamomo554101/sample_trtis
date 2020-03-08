@@ -1,4 +1,5 @@
-ARG BASE_IMAGE=tensorrtserver_build
+#ARG BASE_IMAGE=tensorrtserver_build
+ARG BASE_IMAGE=nvcr.io/nvidia/tensorrtserver:20.01-py3
 
 FROM ${BASE_IMAGE}
 
@@ -9,15 +10,21 @@ WORKDIR /workspace
 ENV DEBIAN_FRONTEND=noninteractive
 
 # update apt-get library
+RUN sed -i.org -e 's|ports.ubuntu.com|jp.archive.ubuntu.com|g' /etc/apt/sources.list
 RUN apt-get update -y --fix-missing
 
 # install core packages
-RUN set -x && \
-    apt-get install -y wget libboost-dev --fix-missing
-
-# build opencv library
-RUN set -x && \
-    apt-get install -y libopencv-dev libopencv-core-dev --fix-missing
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+            software-properties-common \
+            build-essential \
+            libopencv-dev \
+            libopencv-core-dev \
+            libssl-dev \
+            libtool \
+            pkg-config \
+            wget \
+            libboost-dev
 
 # copy mecab install script and build mecab
 ADD ./install_script/install_mecab.sh /workspace/

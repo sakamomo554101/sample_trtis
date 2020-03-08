@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 
-CUSTOM_BACKEND_CONTAINER_NAME="trtis-custom-backend-build-container"
+echo "start setup_custom_backend.sh ...."
+
+# check parameter
+if [ $# != 1 -a $# != 2 ]; then
+    echo "parameter count is not matched! please set the one or two parameters!"
+    echo "1st : the custom backend container name"
+    echo "2nd : gpu enable or not"
+    exit 1
+fi
+
+CUSTOM_BACKEND_CONTAINER_NAME=$1
+OPTION=""
+if [ $# == 2 ]; then
+    OPTION=$2
+fi
 
 # create model folder and copy model setting files.
 mkdir -p model_repository/sample_instance/1
@@ -45,7 +59,7 @@ docker exec -it $CUSTOM_BACKEND_CONTAINER_NAME sh -c \
     "echo 'add_subdirectory(../../custom_backend/face_recognition_model src/custom/face_recognition_model)' >> /workspace/build/trtis-custom-backends/CMakeLists.txt"
 
 ## build custom backend files
-docker exec -it $CUSTOM_BACKEND_CONTAINER_NAME sh -c "cd /workspace && bash build_custom_backend.sh"
+docker exec -it $CUSTOM_BACKEND_CONTAINER_NAME sh -c "cd /workspace && bash build_custom_backend.sh ${OPTION}"
 
 # move so object from custom_backend_container
 CONTAINER_ID=$(docker ps -a -f name=$CUSTOM_BACKEND_CONTAINER_NAME --format "{{.ID}}")

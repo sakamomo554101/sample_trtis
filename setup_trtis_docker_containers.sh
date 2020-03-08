@@ -7,6 +7,7 @@ BUILD_SERVER=true
 BUILD_CLIENT=true
 FLG_NO_CACHE=false
 FLG_NO_BUILD=false
+FLG_USE_GPU=false
 for param in $@
     do
         if [ $param == "--no-cache" ]; then
@@ -21,6 +22,9 @@ for param in $@
         if [ $param == "--only-server" ]; then
             BUILD_CLIENT=false
         fi
+        if [ $param == "--use-gpu" ]; then
+            FLG_USE_GPU=true
+        fi
     done
 
 if "${BUILD_SERVER}"; then
@@ -34,6 +38,11 @@ if "${FLG_NO_BUILD}"; then
 fi
 if "${FLG_NO_CACHE}"; then
     echo "will not use docker cache when docker image is built"
+fi
+if "${FLG_USE_GPU}"; then
+    echo "will build each container with GPU"
+else
+    echo "will build each container without GPU"
 fi
 
 # clone trtis repository
@@ -65,43 +74,57 @@ cd ../
 # stop and delete container if existed
 docker-compose down
 
-# create the trtis client, custom-backend containers(see docker-compose.yml for more information)
+# create the trtis client, custom-backend containers(see docker-compose.yml or docker-compose.gpu.yml for more information)
+## get docker-compose file name
+DOCKER_COMPOSE_FILE_NAME="docker-compose.yml"
+SERVER_NAME="trtis-server-container"
+CUSTOM_BACKEND_NAME="trtis-custom-backend-build-container"
+CLIENT_NAME="trtis-client-container"
+if "${FLG_USE_GPU}"; then
+    DOCKER_COMPOSE_FILE_NAME="docker-compose.gpu.yml"
+    SERVER_NAME="trtis-server-container-gpu"
+    CUSTOM_BACKEND_NAME="trtis-custom-backend-build-container-gpu"
+fi
 ## create client container
 if "${BUILD_CLIENT}"; then
     echo "----------  start to build trtis-client-container  ------------"
     if "${FLG_NO_CACHE}"; then
-        docker-compose build --no-cache trtis-client-container
-        docker-compose up -d trtis-client-container
+        docker-compose build --no-cache ${CLIENT_NAME}
+        docker-compose up -d ${CLIENT_NAME}
     elif "${FLG_NO_BUILD}"; then
-        docker-compose up -d trtis-client-container
+        docker-compose up -d ${CLIENT_NAME}
     else
-        docker-compose up --build -d trtis-client-container
-    fi
-    docker exec -it trtis-client-container sh -c "cd /workspace && bash build_client_library.sh"
+        docker-compose up --build -d ${CLIENT_NAME}
+    fi 
+    docker exec -it ${CLIENT_NAME} sh -c "cd /workspace && bash build_client_library.sh"
 fi
 ## create server containers
 if "${BUILD_SERVER}"; then
     ### create custom backend build container
     echo "----------  start to build trtis-custom-backend-container  ------------"
     if "${FLG_NO_CACHE}"; then
-        docker-compose build --no-cache trtis-custom-backend-build-container
-        docker-compose up -d trtis-custom-backend-build-container
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} build --no-cache ${CUSTOM_BACKEND_NAME}
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up -d ${CUSTOM_BACKEND_NAME}
     elif "${FLG_NO_BUILD}"; then
-        docker-compose up -d trtis-custom-backend-build-container
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up -d ${CUSTOM_BACKEND_NAME}
     else
-        docker-compose up --build -d trtis-custom-backend-build-container
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up --build -d ${CUSTOM_BACKEND_NAME}
     fi
-    bash ./setup_custom_backend.sh
+    OPTION=""
+    if "${FLG_USE_GPU}"; then
+        OPTION="USE_GPU"
+    fi
+    bash ./setup_custom_backend.sh ${CUSTOM_BACKEND_NAME} ${OPTION}
 
     ### create server container
     echo "----------  start to build trtis-server-container  ------------"
     if "${FLG_NO_CACHE}"; then
-        docker-compose build --no-cache trtis-server-build-container
-        docker-compose up -d trtis-server-build-container
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} build --no-cache ${SERVER_NAME}
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up -d ${SERVER_NAME}
     elif "${FLG_NO_BUILD}"; then
-        docker-compose up -d trtis-server-build-container
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up -d ${SERVER_NAME}
     else
-        docker-compose up --build -d trtis-server-build-container
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up --build -d ${SERVER_NAME}
     fi
 fi
 

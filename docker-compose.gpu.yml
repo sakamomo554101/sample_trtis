@@ -1,0 +1,19 @@
+version: "2.4"
+
+services:
+  trtis-server-container-gpu:
+    extends:
+      file: docker-compose.yml
+      service: trtis-server-container
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    container_name: trtis-server-container-gpu
+  trtis-custom-backend-build-container-gpu:
+    extends:
+      file: docker-compose.yml
+      service: trtis-custom-backend-build-container
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    container_name: trtis-custom-backend-build-container-gpu
