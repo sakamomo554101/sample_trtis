@@ -8,6 +8,7 @@ BUILD_CLIENT=true
 FLG_NO_CACHE=false
 FLG_NO_BUILD=false
 FLG_USE_GPU=false
+USE_SOURCE_IMAGE=false
 for param in $@
     do
         if [ $param == "--no-cache" ]; then
@@ -24,6 +25,9 @@ for param in $@
         fi
         if [ $param == "--use-gpu" ]; then
             FLG_USE_GPU=true
+        fi
+        if [ $param == "--use-source-image" ]; then
+            USE_SOURCE_IMAGE=true
         fi
     done
 
@@ -44,24 +48,28 @@ if "${FLG_USE_GPU}"; then
 else
     echo "will build each container without GPU"
 fi
+if "${USE_SOURCE_IMAGE}"; then
+    echo "will build trtis docker image using source codes"
+fi
 
 # clone trtis repository
 git clone https://github.com/NVIDIA/tensorrt-inference-server
 
 # build base trtis docker images
 cd tensorrt-inference-server
-if "${BUILD_SERVER}"; then
+# TODO : if USE_SOURCE_IMAGE is true, trtis server image and custom backend image need to be built from trtis source codes.
+#if "${BUILD_SERVER}"; then
     ## build trtis server image if not existed
-    if [ ! "$(docker image ls -q tensorrtserver_build)" ]; then
-        echo "tensorrtserver_build image is not existed. start to build..."
-        docker build --pull -t tensorrtserver_build --target trtserver_build .
-    fi
+#    if [ ! "$(docker image ls -q tensorrtserver_build)" ]; then
+#        echo "tensorrtserver_build image is not existed. start to build..."
+#        docker build --pull -t tensorrtserver_build --target trtserver_build .
+#    fi
     ## build trtis custom-backend image if not existed
-    if [ ! "$(docker image ls -q tensorrtserver_cbe)" ]; then
-        echo "tensorrtserver_cbe image is not existed. start to build..."
-        docker build -t tensorrtserver_cbe -f Dockerfile.custombackend .
-    fi
-fi
+#    if [ ! "$(docker image ls -q tensorrtserver_cbe)" ]; then
+#        echo "tensorrtserver_cbe image is not existed. start to build..."
+#        docker build -t tensorrtserver_cbe -f Dockerfile.custombackend .
+#    fi
+#fi
 if "${BUILD_CLIENT}"; then
     ## build trtis client image if not existed
     if [ ! "$(docker image ls -q tensorrtserver_client)" ]; then

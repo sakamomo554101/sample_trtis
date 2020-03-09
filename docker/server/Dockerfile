@@ -1,4 +1,3 @@
-#ARG BASE_IMAGE=tensorrtserver_build
 ARG BASE_IMAGE=nvcr.io/nvidia/tensorrtserver:20.01-py3
 
 FROM ${BASE_IMAGE}
