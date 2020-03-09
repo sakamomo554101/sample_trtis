@@ -14,19 +14,17 @@ def setup_ui():
     model_name = st.sidebar.selectbox("select the model", ("face_recognition_model",))
     protocol_name = st.sidebar.selectbox("select the protocol", ("http", "grpc"))
     
+    # create context parameter
+    ctx_param = ContextParameter(model_name=model_name)
+    ctx_param.server_url = url_text
+    ctx_param.http_headers = None
+    ctx_param.verbose = True
+    ctx_param.protocol = ProtocolType.from_str(protocol_name) # http or grpc
+    ctx_param.model_version = -1
+    
     # setup file picker
     uploaded_file = st.file_uploader("Choose a image file", type="jpg")
     if uploaded_file is not None:
-        # setup environment
-        ctx_param = ContextParameter(model_name=model_name)
-        ctx_param.server_url = url_text
-        ctx_param.http_headers = None
-        ctx_param.verbose = True
-        ctx_param.protocol = ProtocolType.from_str(protocol_name) # http or grpc
-        ctx_param.model_version = -1
-        batch_size = 1
-        check_health = False
-        
         # get parameter from model config
         model_param = get_model_parameter(ctx_param.server_url, ctx_param.protocol, ctx_param.model_name, ctx_param.verbose)
         input_width = model_param.input[0].dims[1]

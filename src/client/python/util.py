@@ -13,6 +13,8 @@ class ContextParameter:
         self.protocol = ProtocolType.from_str("http") # http or grpc
         self.model_name = model_name
         self.model_version = -1
+        self.batch_size = 1
+        self.check_health = False
 
 def get_input(binary_mode=False):
     text_list = []
