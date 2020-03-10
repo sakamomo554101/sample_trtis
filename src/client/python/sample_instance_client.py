@@ -5,11 +5,11 @@ from util import *
 
 def main():
     # setup environment
-    server_url = "trtis-server-container:8000"
+    server_url = "trtis-server-container:8000" # http -> port = 8000, grpc -> port = 8001
     http_headers = []
     http_headers.append(b"test1:hoge")
     verbose = True
-    protocol = ProtocolType.from_str("grpc") # http or grpc
+    protocol = ProtocolType.from_str("http") # http or grpc
     model_name = "sample_instance"
     model_version = -1
 
