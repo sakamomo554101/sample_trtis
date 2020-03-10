@@ -9,7 +9,7 @@ def main():
     http_headers = []
     http_headers.append(b"test1:hoge")
     verbose = True
-    protocol = ProtocolType.from_str("http") # http or grpc
+    protocol = ProtocolType.from_str("grpc") # http or grpc
     model_name = "sample_instance"
     model_version = -1
 
@@ -21,8 +21,7 @@ def main():
 
 
 def infer(url, model_name, model_version, protocol, http_headers, verbose):
-    infer_ctx = InferContext(url, protocol, model_name, model_version,
-                             http_headers=http_headers, verbose=verbose)
+    infer_ctx = InferContext(url, protocol, model_name, model_version, http_headers=None, verbose=verbose)
     
     batch_size = 1
     input_data = [np.array(["testtesttest"])]

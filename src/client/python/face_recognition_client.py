@@ -10,16 +10,18 @@ import streamlit as st
 
 def setup_ui():
     # setup sidebar
-    url_text = st.sidebar.text_input("input url of the inference server", "trtis-server-container:8000")
+    url_text = st.sidebar.text_input("input url of the inference server", "trtis-server-container")
     model_name = st.sidebar.selectbox("select the model", ("face_recognition_model",))
     protocol_name = st.sidebar.selectbox("select the protocol", ("http", "grpc"))
     
     # create context parameter
-    ctx_param = ContextParameter(model_name=model_name)
-    ctx_param.server_url = url_text
+    ctx_param = ContextParameter(
+        url=url_text,
+        protocol=protocol_name,
+        model_name=model_name
+    )
     ctx_param.http_headers = None
     ctx_param.verbose = True
-    ctx_param.protocol = ProtocolType.from_str(protocol_name) # http or grpc
     ctx_param.model_version = -1
     
     # setup file picker
