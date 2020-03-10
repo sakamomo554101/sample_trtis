@@ -6,13 +6,21 @@ import os
 
 
 class ContextParameter:
-    def __init__(self, model_name):
-        self.server_url = "localhost:8000"
+    PROTOCOL_PORT_PAIR = {"http":"8000", "grpc":"8001"}
+    
+    def __init__(self, url, protocol, model_name):
+        if not (protocol in self.PROTOCOL_PORT_PAIR):
+            raise Exception("{} protocol can not be used!".format(protocol))
+        
+        self.server_url = url + ":" + self.PROTOCOL_PORT_PAIR[protocol]
         self.http_headers = None
         self.verbose = True
-        self.protocol = ProtocolType.from_str("http") # http or grpc
+        self.protocol = ProtocolType.from_str(protocol) # http or grpc
         self.model_name = model_name
         self.model_version = -1
+        self.batch_size = 1
+        self.check_health = False
+
 
 def get_input(binary_mode=False):
     text_list = []
