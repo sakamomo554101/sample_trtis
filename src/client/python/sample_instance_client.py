@@ -5,7 +5,7 @@ from util import *
 
 def main():
     # setup environment
-    server_url = "trtis-server-container:8000"
+    server_url = "trtis-server-container:8000" # http -> port = 8000, grpc -> port = 8001
     http_headers = []
     http_headers.append(b"test1:hoge")
     verbose = True
@@ -21,8 +21,7 @@ def main():
 
 
 def infer(url, model_name, model_version, protocol, http_headers, verbose):
-    infer_ctx = InferContext(url, protocol, model_name, model_version,
-                             http_headers=http_headers, verbose=verbose)
+    infer_ctx = InferContext(url, protocol, model_name, model_version, http_headers=None, verbose=verbose)
     
     batch_size = 1
     input_data = [np.array(["testtesttest"])]
