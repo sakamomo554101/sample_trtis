@@ -18,7 +18,13 @@ services:
       memlock: -1
       stack: 67108864
     shm_size: "1g"
-    entrypoint: "/opt/tensorrtserver/nvidia_entrypoint.sh trtserver --model-repository=/models --log-verbose=1" # TODO : Should not set entrypoint, get parameter from commandline
+    entrypoint: "/opt/tensorrtserver/nvidia_entrypoint.sh trtserver 
+                  --model-repository=/models --model-control-mode=explicit 
+                  --load-model=face_recognition_model
+                  --load-model=mecab_model
+                  --load-model=sample_instance
+                  --load-model=sample_sequence
+                  --log-verbose=1" # TODO : Should not set entrypoint, get parameter from commandline
   trtis-client-container:
     image: trtis-client
     build: ./docker/client
@@ -29,6 +35,18 @@ services:
     tty: true
     ports:
       - "8501:8501"
+  data-uploader-container:
+    image: data-uploader
+    build: 
+      context: ./docker
+      dockerfile: ./data_uploader/Dockerfile
+    container_name: data-uploader-container
+    volumes:
+      - ./src/data_uploader:/workspace/src
+      - ./dataset:/workspace/dataset
+    ports:
+      - "8502:8502"
+    entrypoint: "bash entry.sh"
   trtis-custom-backend-build-container:
     image: trtis-custom-backend-build
     build: 
