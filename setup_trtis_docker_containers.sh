@@ -134,6 +134,17 @@ if "${BUILD_SERVER}"; then
     else
         docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up --build -d ${SERVER_NAME}
     fi
+
+    ### create data uploader container
+    echo "----------  start to build data-uploader-container  ------------"
+    if "${FLG_NO_CACHE}"; then
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} build --no-cache "data-uploader-container"
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up -d "data-uploader-container"
+    elif "${FLG_NO_BUILD}"; then
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up -d "data-uploader-container"
+    else
+        docker-compose -f ${DOCKER_COMPOSE_FILE_NAME} up --build -d "data-uploader-container"
+    fi
 fi
 
 echo "----------end setup script of sample_trtis------------"

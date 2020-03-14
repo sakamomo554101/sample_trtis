@@ -44,8 +44,11 @@ if [ ! -e "model_repository/face_recognition_model/shape_predictor_5_face_landma
     mv shape_predictor_5_face_landmarks.dat model_repository/face_recognition_model/
 fi
 
-# create the face dataset folder if needed
+# create the face dataset folder and face.csv if needed
 mkdir -p dataset/face/image
+if [ ! -e dataset/face/face.csv ]; then
+    touch dataset/face/face.csv
+fi
 
 # build the custom-backend codes
 ## add the build target source into CMakeLists.txt(TODO : write target into CMakeLists.txt if needed.)
